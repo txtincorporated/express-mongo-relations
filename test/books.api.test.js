@@ -30,10 +30,12 @@ describe('test books resource route', () => {
 
   const request = chai.request(app);
 
-  // const twain = {
-  //   name: 'Mark Twain',
-  //   centuries: ['19th'],
-  // };
+  const twain = {
+    name: 'Mark Twain',
+    centuries: ['19th'],
+    altnames: [],
+    books: []
+  };
   const sawyer = {
     title: 'Tom Sawyer',
     author: 'Mark Twain',
@@ -61,6 +63,22 @@ describe('test books resource route', () => {
       .catch(done);
   });
 
+  it('/POST (author)', done => {
+    request 
+      .post('/api/authors')
+      .send(twain)
+      .then(res => {
+        authResult = res.body;
+        console.log('authResult POST: ', authResult);
+        twain.__v = 0;
+        twain._id = authResult._id;
+        sawyer.authId = twain._id;
+        clemens.authId = twain._id;
+        done();
+      })
+      .catch(done);
+  });
+  
   it('/POST', done => {
     console.log('Test books POST...');
     request
@@ -81,6 +99,7 @@ describe('test books resource route', () => {
 
   it('/GET/:id', done => {
     console.log('Test books GET/:id...');
+    sawyer.authId = { _id: `${twain._id}`, name: 'Mark Twain' };
     request
       .get(`/api/books/${sawyer._id}`)
       // .query({_id:sawyer._id})
@@ -116,6 +135,8 @@ describe('test books resource route', () => {
 
   it('GET all -- after', done => {
     console.log('Test books GET all -- after...');
+    clemens.authId = { _id: `${twain._id}`, name: 'Mark Twain' };
+
     request
       .get('/api/books')
       .then(res => {
