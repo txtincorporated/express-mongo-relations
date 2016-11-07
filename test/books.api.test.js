@@ -30,21 +30,28 @@ describe('test books resource route', () => {
 
   const request = chai.request(app);
 
+  // const twain = {
+  //   name: 'Mark Twain',
+  //   centuries: ['19th'],
+  // };
   const sawyer = {
     title: 'Tom Sawyer',
     author: 'Mark Twain',
-    genre: 'novel'
+    authId: '582033d6f7e5f639eb20788d',
+    genres: []
   }; 
   const clemens = {
     title: 'Tom Sawyer',
     author: 'Samuel Clemens',
-    genre: 'novel'
+    authId: '582033d6f7e5f639eb20788d',
+    genres: []
   };
 
   var bookResult = null;
 
 
   it('/GET all -- before', done => {
+    console.log('Test books GET all -- before...');
     request
       .get('/api/books')
       .then(res => {
@@ -55,35 +62,40 @@ describe('test books resource route', () => {
   });
 
   it('/POST', done => {
+    console.log('Test books POST...');
     request
-      .post('/api/books')
-      .send(sawyer)
-      .then(res => {
-        bookResult = res.body;
-        console.log('bookResult POST: ', bookResult);
-        sawyer.__v = 0;
-        sawyer._id = bookResult._id;
-        assert.deepEqual(bookResult, sawyer);
-        done();
-      })
-      .catch(done);
+    .post('/api/books')
+    .send(sawyer)
+    .then(res => {
+      bookResult = res.body;
+      console.log('bookResult POST: ', bookResult);
+      sawyer.__v = 0;
+      sawyer._id = bookResult._id;
+      // sawyer.authId = authResult._id;
+      console.log('sawyer2: ', sawyer);
+      assert.deepEqual(bookResult, sawyer);
+      done();
+    })
+  .catch(done) ;
   });
 
   it('/GET/:id', done => {
+    console.log('Test books GET/:id...');
     request
-      .get('/api/books')
-      .query({_id:sawyer._id})
+      .get(`/api/books/${sawyer._id}`)
+      // .query({_id:sawyer._id})
       .then(res => {
-        console.log('bookResult GET', bookResult);
         console.log('sawyer GET: ', sawyer);
         bookResult = res.body;
-        assert.deepEqual(bookResult, [sawyer]);
+        console.log('bookResult GET', bookResult);
+        assert.deepEqual([bookResult], [sawyer]);
         done();
       })
       .catch(done);
   });
 
   it('/PUT/:id', done => {
+    console.log('Test books PUT/:id...');
     request
       .put(`/api/books/${sawyer._id}`)
       // .query({_id:sawyer._id})
@@ -103,6 +115,7 @@ describe('test books resource route', () => {
   });
 
   it('GET all -- after', done => {
+    console.log('Test books GET all -- after...');
     request
       .get('/api/books')
       .then(res => {
@@ -113,6 +126,7 @@ describe('test books resource route', () => {
   });
 
   it('DELETE /:id', done => {
+    console.log('Test books DELETE...');
     request
       .delete('/api/books')
       .query({_id:sawyer._id})      

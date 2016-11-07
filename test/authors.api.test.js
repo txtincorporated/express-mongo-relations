@@ -9,7 +9,7 @@ const connection = require('../lib/setup-mongoose');
 
 const app = require('../lib/app');
 
-describe('author', () => {
+describe('Test authors resource route', () => {
 
   before(done => {
     const CONNECTED = 1;
@@ -31,13 +31,15 @@ describe('author', () => {
 
   const trout = {
     name: 'Kilgore Trout',
-    centuries: '20th',
-    altname: 'Theodore Sturgeon'
+    centuries: ['20th'],
+    altnames: ['Theodore Sturgeon'],
+    books: []
   };
   const sturgeon = {
     name: 'Kilgore Trout',
-    centuries: '20th',
-    altname: ''
+    centuries: ['20th'],
+    altnames: [''],
+    books: []
   };
 
   var authResult = null;
